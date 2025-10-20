@@ -22,3 +22,7 @@ def catalogo():
             "quantidade": produto[4]  
         })
     return {"produtos": lista}
+@app.post("/produtos")
+def adicionar_produto(nome: str, categoria: str, preco: float, quantidade: int):
+    funcao.criar_produto(nome, categoria, preco, quantidade)
+    return {"mensagem": "Produto adicionado com sucesso"}
