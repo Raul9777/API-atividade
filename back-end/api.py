@@ -26,3 +26,15 @@ def catalogo():
 def adicionar_produto(nome: str, categoria: str, preco: float, quantidade: int):
     funcao.criar_produto(nome, categoria, preco, quantidade)
     return {"mensagem": "Produto adicionado com sucesso"}
+
+@app.put("/produtos/(id_produto)")
+def atualizar_produto(id_produto:int, novo_preco:float):
+    funcao.atualizar_produtos(id_produto, novo_preco)
+    produto = funcao.buscar_produto()
+    if produto:
+        funcao.atualizar_preco(id_produto, novo_preco)
+        return{"mensagem": "Produto atualizado com sucesso"}
+    return{"erro": "Produto não encontrado"}
+
+    
+    
