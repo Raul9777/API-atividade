@@ -1,16 +1,24 @@
 from fastapi import FastAPI
-import funcao
+import funcao  
 
-app = FastAPI(title = "Gerenciador de Produtos")
+app = FastAPI(title="Gerenciador de Produtos")
 
 @app.get("/")
 def home():
     return {
-        "Mensage": "Bem-vindo ao gerenciador de produtos"
+        "Mensagem": "Bem-vindo ao gerenciador de produtos"
     }
 
 @app.get("/produtos")
 def catalogo():
-    filmes = funcao.listar_produtos()
+    produtos = funcao.listar_produtos() 
     lista = []
-    for produto in 
+    for produto in produtos:  
+        lista.append({
+            "id": produto[0], 
+            "nome": produto[1],  
+            "categoria": produto[2],
+            "preco": produto[3], 
+            "quantidade": produto[4]  
+        })
+    return {"produtos": lista}
