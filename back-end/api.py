@@ -36,5 +36,12 @@ def atualizar_produto(id_produto:int, novo_preco:float):
         return{"mensagem": "Produto atualizado com sucesso"}
     return{"erro": "Produto não encontrado"}
 
+@app.delete("/produtos/{id_produto}")
+def deletar_produto(id_produto:int):
+    produto = funcao.buscar_produtos(id_produto)
+    if produto:
+        funcao.deletar_produto(id_produto)
+        return {"mensagem": "Produto excluido com sucesso"}
+    return {"erro": "Produto não encontrado"}
     
     
