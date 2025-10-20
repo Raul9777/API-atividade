@@ -19,4 +19,41 @@ def criar_tabela():
         finally:
             cursor.close()
             conexao.close()
-criar_tabela()
+
+
+def criar_produto(nome, categoria, preco, quantidade):
+    conexao, cursor = conectar()
+    if conexao:
+        try:
+            cursor.execute(
+                "INSERT INTO produtos(nome, categoria, preco, quantidade) VALUES (%s, %s, %s, %s)",
+                (nome, categoria, preco, quantidade)
+            )
+            conexao.commit()
+        except Exception as erro:
+            print(f"Erro ao inserir produto {erro}")
+        finally:
+            cursor.close()
+            conexao.close()
+
+
+
+def listar_produtos():
+    conexao,cursor = conectar()
+    if conexao:
+        try:
+            cursor.execute(
+                "SELECT * FROM produtos ORDER BY id"
+            )
+            return cursor.fetchall()
+        except Exception as erro:
+            print(f"Erro ao listar {erro}")
+            return[]
+        finally:
+            cursor.close()
+            conexao.close()
+listar_produtos()
+
+
+
+
