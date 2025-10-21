@@ -21,6 +21,7 @@ def criar_tabela():
             conexao.close()
 
 
+
 def criar_produto(nome, categoria, preco, quantidade):
     conexao, cursor = conectar()
     if conexao:
@@ -35,6 +36,7 @@ def criar_produto(nome, categoria, preco, quantidade):
         finally:
             cursor.close()
             conexao.close()
+
 
 
 
@@ -64,7 +66,7 @@ def atualizar_preco(id_produto, novo_preco):
             )
             conexao.commit()
         except Exception as erro:
-            print(f"Erro ao atualizar o preço do produto: {erro}")
+            print(f"Erro ao atualizar o preço do estoque: {erro}")
         finally:
             cursor.close()
             conexao.close()
@@ -83,6 +85,7 @@ def deletar_produto(id_produto):
         finally:
             cursor.close()
             conexao.close()
+
 
 
 

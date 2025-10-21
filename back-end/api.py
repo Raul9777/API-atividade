@@ -3,45 +3,41 @@ import funcao
 
 app = FastAPI(title="Gerenciador de Produtos")
 
-@app.get("/")
+@app.get("/estoque")
 def home():
-    return {
-        "Mensagem": "Bem-vindo ao gerenciador de produtos"
-    }
+    return {"Mensagem": "Bem-vindo ao gerenciador de produtos"}
 
-@app.get("/produtos")
+@app.get("/estoque/catalogo")
 def catalogo():
     produtos = funcao.listar_produtos() 
     lista = []
-    for produto in produtos:  
+    for produto in produtos:
         lista.append({
-            "id": produto[0], 
-            "nome": produto[1],  
+            "id": produto[0],
+            "nome": produto[1],
             "categoria": produto[2],
-            "preco": produto[3], 
-            "quantidade": produto[4]  
+            "preco": produto[3],
+            "quantidade": produto[4]
         })
-    return {"produtos": lista}
-@app.post("/produtos")
+    return {"estoque": lista}
+
+@app.post("/estoque")
 def adicionar_produto(nome: str, categoria: str, preco: float, quantidade: int):
     funcao.criar_produto(nome, categoria, preco, quantidade)
     return {"mensagem": "Produto adicionado com sucesso"}
 
-@app.put("/produtos/(id_produto)")
-def atualizar_produto(id_produto:int, novo_preco:float):
-    funcao.atualizar_produtos(id_produto, novo_preco)
-    produto = funcao.buscar_produto()
+@app.put("/produtos/{id_produto}")
+def atualizar_produto(id_produto: int, novo_preco: float):
+    funcao.atualizar_preco(id_produto, novo_preco)
+    produto = funcao.atualizar_produto(id_produto)
     if produto:
-        funcao.atualizar_preco(id_produto, novo_preco)
-        return{"mensagem": "Produto atualizado com sucesso"}
-    return{"erro": "Produto não encontrado"}
-
-@app.delete("/produtos/{id_produto}")
-def deletar_produto(id_produto:int):
-    produto = funcao.buscar_produtos(id_produto)
-    if produto:
-        funcao.deletar_produto(id_produto)
-        return {"mensagem": "Produto excluido com sucesso"}
+        return {"mensagem": "Produto atualizado com sucesso"}
     return {"erro": "Produto não encontrado"}
-    
-    
+
+@app.delete("/estoque/{id_produto}")
+def deletar_produto(id_produto: int):
+    deletar = funcao.deletar_produto(id_produto)
+    if deletar:
+        funcao.deletar_produto(id_produto)
+        return {"mensagem": "Produto excluído com sucesso"}
+    return {"erro": "Produto não encontrado"}
