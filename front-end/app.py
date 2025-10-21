@@ -62,3 +62,24 @@ elif menu == "Atualizar Preço do Produto":
                  st.success("Preço atualizado com sucesso")
         else:
              st.error("Erro ao atualizar o preço do produto")
+
+
+elif menu == "Deletar Produto":
+    st.subheader("Deletar um Produto")
+
+    id = st.number_input("Digite o ID do produto que deseja deletar: ", min_value=1, step=1)
+
+    if st.button("Deletar"):
+        response = requests.delete(f"{API_URL}/estoque/{id}")
+        
+        if response.status_code == 200:
+            data = response.json()
+
+            if "error" in data and data["error"] == "Produto não encontrado":
+                st.warning("Produto com esse ID não existe.")
+            elif "mensagem" in data:
+                st.success(data["mensagem"])
+            else:
+                st.warning("Resposta inesperada da API.")
+        else:
+            st.error(f"Erro ao deletar o produto. Código: {response.status_code}")
