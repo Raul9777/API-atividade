@@ -55,7 +55,6 @@ def listar_produtos():
             cursor.close()
             conexao.close()
 
-
 def atualizar_preco(id_produto, novo_preco):
     conexao, cursor = conectar()
     if conexao:
@@ -85,6 +84,7 @@ def deletar_produto(id_produto):
         finally:
             cursor.close()
             conexao.close()
+deletar_produto(1)
 
 
 

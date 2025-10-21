@@ -3,38 +3,62 @@ import requests
 
 API_URL = "http://127.0.0.1:8000"
 
-st.set_page_config(page_title="Gerenciamento de Produtos")
+st.set_page_config(page_title="Gerenciador de Estoques", page_icon="🗄")
 
-st.title("Gerenciamento de Produtos")
+st.header("**Gerenciador de Estoque 📦**")
 
-menu = st.sidebar.radio("Menu", ["Produtos", "Adicionar Produto"])
+st.subheader("Bem-vindo ao sistema de gerenciamento de Estoque!")
 
-if menu == "Produtos":
-    st.subheader("Todos os produtos disponíveis")
+menu = st.sidebar.radio("Opções", ["Listar Produtos", "Adicionar Produto", "Atualizar Preço do Produto", "Deletar Produto"])
+if menu == "Listar Produtos":
+    st.subheader("Todos Produtos do estoque")
     response = requests.get(f"{API_URL}/estoque")
     
     if response.status_code == 200:
-        produtos = response.json().get("produtos", [])
+        produtos = response.json().get("produtos", [])  
+        
         if produtos:
-            for produto in produtos:
-                st.write(f"**{produto['nome']}** ({produto['categoria']}) - {produto['preco']} - {produto['quantidade']}")
+            st.dataframe(produtos)
         else:
-            st.info("Nenhum produto encontrado")
+            st.info("Nenhum produto cadastrado")
     else:
-        st.error("Erro ao obter produtos")
+        st.error("Erro ao conectar com a API")
 
 elif menu == "Adicionar Produto":
-    st.subheader("Adicionar Produto")
-    
-    nome = st.text_input("Nome do produto")
-    categoria = st.text_input("Categoria do produto")
-    preco = st.number_input("Preço do produto", min_value=0.0, format="%.2f")
-    quantidade = st.number_input("Quantidade de produtos", min_value=0, step=1)
-    
-    if st.button("Salvar Produto"):
-        params = {"nome": nome, "categoria": categoria, "preco": preco, "quantidade": quantidade}
-        response = requests.post(f"{API_URL}/produtos", json=params)
+    st.subheader("➕ Adicionar produto")
+
+    nome = st.text_input("Digite o **Nome do Produto**: ")
+    categoria = st.text_input("Digite a **Categoria do Produto**: ")
+    preco = st.number_input("Digite o **Preço do Produto**: ", step=0.01)
+    quantidade = st.number_input("Digite a **Quantidade** :", step=1)
+
+    if st.button("Salvar Produto 📂"):
+        params = {
+            "nome": nome,
+            "categoria": categoria,
+            "preco": preco,
+            "quantidade": quantidade
+        }
+
+        response = requests.post(f"{API_URL}/estoque", params=params)
         if response.status_code == 200:
-            st.success("Produto adicionado com sucesso")
+            st.success("Produto Adicionado com Sucesso!")
         else:
-            st.error("Erro ao adicionar o produto")
+            st.error("Erro ao Adicionar o Produto")
+
+elif menu == "Atualizar Preço do Produto":
+    st.subheader("Atualizar dados de um Produto 📁")
+
+    id_produto = st.number_input("ID do Produto que deseja atualizar", min_value=1, step=1)
+    novo_preco = st.number_input("Novo Preço: ", )
+    if st.button("Atualizar"):
+        dados = {"novo_preco": novo_preco}
+        response = requests.put(f"{API_URL}/estoque/{id_produto}", params=dados)
+        if response.status_code == 200:
+            data = response.json()
+            if "error" in data:
+                st.warning(data["erro"])
+            else:
+                 st.success("Preço atualizado com sucesso")
+        else:
+             st.error("Erro ao atualizar o preço do produto")
